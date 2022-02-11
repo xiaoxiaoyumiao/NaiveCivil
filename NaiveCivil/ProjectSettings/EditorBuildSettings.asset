@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/NetworkDemo.unity
     guid: 1e3e1e68d8cf84747a91712135b0aec8
+  - enabled: 1
+    path: Assets/Scenes/WarScene.unity
+    guid: f990927201dd3d847b4e920a035dfc09
   m_configObjects: {}

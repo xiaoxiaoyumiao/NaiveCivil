@@ -137,5 +137,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   manager: {fileID: 0}
-  clientMaterial: {fileID: 0}
+  clientColor: {r: 0, g: 0, b: 0, a: 1}
+  maxStamina: 3
   stamina: -1
