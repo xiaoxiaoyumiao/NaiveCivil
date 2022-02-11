@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
@@ -14,7 +15,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 	private void Start()
     {
 		Instance = this;
-
+        
 		// in case we started this demo with the wrong scene being active, simply load the menu scene
 		if (!PhotonNetwork.IsConnected)
 		{
@@ -43,13 +44,12 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 				Debug.LogFormat("Ignoring scene load for {0}", SceneManagerHelper.ActiveSceneName);
 			}
-
-
 		}
 	}
 
 	void Update()
 	{
+		Debug.Log(PhotonNetwork.CurrentRoom.PlayerCount);
 		// "back" button of phone equals "Escape". quit app if that's pressed
 		if (Input.GetKeyDown(KeyCode.Escape))
 		{
@@ -59,22 +59,12 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 	public override void OnPlayerEnteredRoom(Player other)
 	{
-		Debug.Log("OnPlayerEnteredRoom() " + other.NickName); // not seen if you're the player connecting
-
-		if (PhotonNetwork.IsMasterClient)
-		{
-			Debug.LogFormat("OnPlayerEnteredRoom IsMasterClient {0}", PhotonNetwork.IsMasterClient); // called before OnPlayerLeftRoom
-		}
+		Debug.Log("OnPlayerEnteredRoom() " + other.NickName); // not seen if you're the player connecting 
 	}
 
 	public override void OnPlayerLeftRoom(Player other)
 	{
 		Debug.Log("OnPlayerLeftRoom() " + other.NickName); // seen when other disconnects
-
-		if (PhotonNetwork.IsMasterClient)
-		{
-			Debug.LogFormat("OnPlayerEnteredRoom IsMasterClient {0}", PhotonNetwork.IsMasterClient); // called before OnPlayerLeftRoom
-		}
 	}
 
 	public void LeaveRoom()
@@ -87,4 +77,5 @@ public class GameManager : MonoBehaviourPunCallbacks
 		SceneManager.LoadScene("WelcomeScene");
 	}
 
+    
 }

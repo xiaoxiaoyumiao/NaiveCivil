@@ -66,3 +66,59 @@ public class Launcher : MonoBehaviourPunCallbacks
         }
     }
 }
+
+
+public class Character
+{
+    public string id;
+    Player owner = null;
+
+    public Player Owner
+    {
+        get { if (owner.ActorNumber == -1) owner = null; return owner; }
+        set { owner = value; }
+    }
+    public bool Allocated
+    {
+        get { return Owner != null; }
+    }
+    public Character(string uuid)
+    {
+        id = uuid;
+    }
+}
+
+public class CharacterPool
+{
+    List<Character> characters;
+    public CharacterPool(List<string> ids)
+    {
+        characters = new List<Character>();
+        foreach (string id in ids)
+        {
+            characters.Add(new Character(id));
+        }
+    }
+
+    public Character AllocateCharacter(Player player)
+    {
+        foreach (Character chara in characters)
+        {
+            if (!chara.Allocated)
+            {
+                chara.Owner = player;
+                return chara;
+            }
+        }
+        return null;
+    }
+
+    public void FreeCharacter(Character character)
+    {
+        var target = characters.Find((Character chara) => { return chara.id == character.id; });
+        if (target != null)
+        {
+            target.Owner = null;
+        }
+    }
+}
