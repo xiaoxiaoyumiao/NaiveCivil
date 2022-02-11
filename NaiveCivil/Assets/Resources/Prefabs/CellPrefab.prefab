@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7654353002528436809}
   - component: {fileID: 8797880170034940997}
   - component: {fileID: 706179347295617433}
+  - component: {fileID: 5224644372982464332}
   m_Layer: 0
   m_Name: CellPrefab
   m_TagString: Untagged
@@ -103,6 +104,7 @@ MonoBehaviour:
   observableSearch: 2
   ObservedComponents:
   - {fileID: 706179347295617433}
+  - {fileID: 5224644372982464332}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -122,3 +124,18 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 1
   m_UseLocal: 1
+--- !u!114 &5224644372982464332
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3895323609108002424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e2e9ddda43adcf4688b59caae0c97bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  manager: {fileID: 0}
+  clientMaterial: {fileID: 0}
+  stamina: -1

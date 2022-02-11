@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
-
+using UnityEngine.UI;
 public class Launcher : MonoBehaviourPunCallbacks
 {
     public string roomName;
+    public string levelName;
+    public Dropdown levelNameChoices;
+
     public string gameVersion = "1";
 
     bool isConnecting;
@@ -21,6 +24,8 @@ public class Launcher : MonoBehaviourPunCallbacks
     // Start is called before the first frame update
     void Start()
     {
+        levelName = levelNameChoices.options[levelNameChoices.value].text;
+        roomName = levelName + "firstRoom";
         roomOptions = new RoomOptions();
         roomOptions.MaxPlayers = 2;
     }
@@ -28,7 +33,13 @@ public class Launcher : MonoBehaviourPunCallbacks
     // Update is called once per frame
     void Update()
     {
-        
+
+    }
+
+    public void UpdateLevelSelection(int choice)
+    {
+        levelName = levelNameChoices.options[levelNameChoices.value].text;
+        roomName = levelName + "firstRoom";
     }
 
     public void Connect()
@@ -62,7 +73,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         // #Critical: We only load if we are the first player, else we rely on  PhotonNetwork.AutomaticallySyncScene to sync our instance scene.
         if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
         {
-            PhotonNetwork.LoadLevel("NetworkDemo");
+            PhotonNetwork.LoadLevel(levelName);
         }
     }
 }
