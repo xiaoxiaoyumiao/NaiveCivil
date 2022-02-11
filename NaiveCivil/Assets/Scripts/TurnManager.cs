@@ -72,7 +72,7 @@ public class TurnManager : MonoBehaviourPunCallbacks, IOnEventCallback
                     Hashtable evTable = content as Hashtable;
                     int turn = (int)evTable["turn"];
                     object move = evTable["move"];
-                    this.TurnManagerListener.OnPlayerMove(sender, turn, move);
+                    this.TurnManagerListener?.OnPlayerMove(sender, turn, move);
 
                     break;
                 }
@@ -85,13 +85,13 @@ public class TurnManager : MonoBehaviourPunCallbacks, IOnEventCallback
                     {
                         this.finishedPlayers.Add(sender);
                         Debug.Log(this.finishedPlayers);
-                        this.TurnManagerListener.OnPlayerFinished(sender, turn, move);
+                        this.TurnManagerListener?.OnPlayerFinished(sender, turn, move);
                     }
 
                     if (IsCompletedByAll)
                     {
                         Debug.Log("Turn completed. Calling callback");
-                        this.TurnManagerListener.OnTurnCompleted(this.Turn);
+                        this.TurnManagerListener?.OnTurnCompleted(this.Turn);
                     }
                     break;
                 }
@@ -121,7 +121,7 @@ public class TurnManager : MonoBehaviourPunCallbacks, IOnEventCallback
         if (propertiesThatChanged.ContainsKey("Turn"))
         {
             this.finishedPlayers.Clear();
-            this.TurnManagerListener.OnTurnBegins(this.Turn);
+            this.TurnManagerListener?.OnTurnBegins(this.Turn);
         }
     }
 
