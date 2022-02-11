@@ -16,11 +16,40 @@ public class TurnManager : MonoBehaviourPunCallbacks, IOnEventCallback
             PhotonNetwork.CurrentRoom.SetTurn(value, true);
         }
     }
-
+   
+    public const byte EvMove = 1;
+    public const byte EvFinalMove = 2;
+    private readonly HashSet<Player> finishedPlayers = new HashSet<Player>();
+    public ITurnManagerCallbacks TurnManagerListener;
     bool mIsFinishedByMe = false;
     public bool IsFinishedByMe
     {
         get { return mIsFinishedByMe; }
+    }
+    public bool IsCompletedByAll
+    {
+        get { return PhotonNetwork.CurrentRoom != null && Turn > 0 && this.finishedPlayers.Count == PhotonNetwork.CurrentRoom.PlayerCount; }
+    }
+
+    public void SendMove(object move, bool finished)
+    {
+        if (IsFinishedByMe)
+        {
+            Debug.LogWarning("Can't SendMove. Turn is finished by this player.");
+            return;
+        }
+        Hashtable moveHt = new Hashtable();
+        moveHt.Add("turn", Turn);
+        moveHt.Add("move", move);
+
+        byte evCode = (finished) ? EvFinalMove : EvMove;
+        PhotonNetwork.RaiseEvent(evCode, moveHt, new RaiseEventOptions() { CachingOption = EventCaching.AddToRoomCache }, SendOptions.SendReliable);
+        if (finished)
+        {
+            PhotonNetwork.LocalPlayer.SetFinishedTurn(Turn);
+        }
+        
+        ProcessOnEvent(evCode, moveHt, PhotonNetwork.LocalPlayer.ActorNumber);
     }
 
     public void OnEvent(EventData photonEvent)
@@ -36,22 +65,66 @@ public class TurnManager : MonoBehaviourPunCallbacks, IOnEventCallback
         }
 
         Player sender = PhotonNetwork.CurrentRoom.GetPlayer(senderId);
+        switch (eventCode)
+        {
+            case EvMove:
+                {
+                    Hashtable evTable = content as Hashtable;
+                    int turn = (int)evTable["turn"];
+                    object move = evTable["move"];
+                    this.TurnManagerListener.OnPlayerMove(sender, turn, move);
 
+                    break;
+                }
+            case EvFinalMove:
+                {
+                    Hashtable evTable = content as Hashtable;
+                    int turn = (int)evTable["turn"];
+                    object move = evTable["move"];
+                    if (turn == this.Turn)
+                    {
+                        this.finishedPlayers.Add(sender);
+                        Debug.Log(this.finishedPlayers);
+                        this.TurnManagerListener.OnPlayerFinished(sender, turn, move);
+                    }
+
+                    if (IsCompletedByAll)
+                    {
+                        Debug.Log("Turn completed. Calling callback");
+                        this.TurnManagerListener.OnTurnCompleted(this.Turn);
+                    }
+                    break;
+                }
+        }
     }
 
-    public void SendMove(object move, bool finished)
+    public void DisableTurn()
     {
-        if (IsFinishedByMe)
-        {
-            Debug.LogWarning("Can't SendMove. Turn is finished by this player.");
-            return;
-        }
+        Turn = 0;
+    }
+
+    public void ResetTurnCount()
+    {
+        Turn = 1;
     }
 
     public void BeginTurn()
     {
-        Turn = this.Turn + 1; // note: this will set a property in the room, which is available to the other players.
+        Turn += 1; // note: this will set a property in the room, which is available to the other players.
     }
+    // This gets called when Turn is synchronously updated.
+    public override void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged)
+    {
+
+        Debug.Log("OnRoomPropertiesUpdate: "+propertiesThatChanged.ToStringFull());
+
+        if (propertiesThatChanged.ContainsKey("Turn"))
+        {
+            this.finishedPlayers.Clear();
+            this.TurnManagerListener.OnTurnBegins(this.Turn);
+        }
+    }
+
 
     // Start is called before the first frame update
     void Start()
@@ -66,7 +139,7 @@ public class TurnManager : MonoBehaviourPunCallbacks, IOnEventCallback
     }
 }
 
-public interface IPunTurnManagerCallbacks
+public interface ITurnManagerCallbacks
 {
     /// <summary>
     /// Called the turn begins event.

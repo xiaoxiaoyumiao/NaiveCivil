@@ -49,7 +49,6 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 	void Update()
 	{
-		Debug.Log(PhotonNetwork.CurrentRoom.PlayerCount);
 		// "back" button of phone equals "Escape". quit app if that's pressed
 		if (Input.GetKeyDown(KeyCode.Escape))
 		{

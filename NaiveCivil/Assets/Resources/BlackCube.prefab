@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 9206524479191344127}
   - component: {fileID: 6155935414437010882}
   - component: {fileID: 6234286758220867484}
+  - component: {fileID: 6187684001884441597}
   m_Layer: 0
   m_Name: BlackCube
   m_TagString: Untagged
@@ -149,3 +150,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   clientMaterial: {fileID: 2100000, guid: fe14b41ba94efd142a0732fb555040f5, type: 2}
+  stamina: -1
+--- !u!114 &6187684001884441597
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8983155256431136466}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e2092bcc1d286b4f8b61f2d0c0757fa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
